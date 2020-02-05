@@ -55,7 +55,7 @@ public class SpringSessionValidationScheduler implements SessionValidationSchedu
 
     /**
      * Specifies how frequently (in milliseconds) this Scheduler will call the
-     * {@link org.apache.shiro.session.mgt.ValidatingSessionManager#validateSessions()
+     * {@link ValidatingSessionManager#validateSessions()
      * ValidatingSessionManager#validateSessions()} method.
      *
      * <p>
