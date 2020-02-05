@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('数据库字段管理列表')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <p>表名称：</p>
+                            <input type="text" name="tbName" th:value="${tbmanage.tbName}" readonly/>
+                        </li>
+                        <li>
+                            <p>中文名：</p>
+                            <input type="text" name="tbChName" th:value="${tbmanage.tbChName}" readonly/>
+                        </li>
+
+                        <li>
+                            <p>创建人：</p>
+                            <input type="text" name="createBy" th:value="${tbmanage.createBy}" readonly/>
+                        </li>
+
+                        <li>
+                            <p>修改人：</p>
+                            <input type="text" name="updateBy" th:value="${tbmanage.updateBy}" readonly/>
+                        </li>
+
+                        <li>
+                            <p>描述：</p>
+                            <textarea type="text" name="tbDesc" th:text="${tbmanage.tbDesc}" readonly>}</textarea>
+                        </li>
+                        <li>
+                            <p>备注：</p>
+                            <textarea type="text" name="remark"  th:text="${tbmanage.remark}" readonly></textarea>
+                        </li>
+                        <li style="display: none">
+                            <p>所属表id：</p>
+                            <input type="text" name="tbId" th:value="${tbmanage.tbId}" id="tbId"/>
+                        </li>
+                    </ul>
+
+
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:fdmanage:add">
+                <i class="fa fa-plus"></i> 添加
+            </a>
+            <a class="btn btn-primary single disabled" onclick="$.operate.edit()"
+               shiro:hasPermission="system:fdmanage:edit">
+                <i class="fa fa-edit"></i> 修改
+            </a>
+            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
+               shiro:hasPermission="system:fdmanage:remove">
+                <i class="fa fa-remove"></i> 删除
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('system:fdmanage:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('system:fdmanage:remove')}]];
+    var fdTypeDatas = [[${@dict.getType('sys_fd_type')}]];
+    var isKeyDatas = [[${@dict.getType('fd_is_pmkey')}]];
+    var isNullDatas = [[${@dict.getType('fd_is_null')}]];
+    var prefix = ctx + "system/fdmanage";
+
+    var tbId = $("#tbId").val();
+    var searchValue=[[${searchValue}]];
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add" + "?tbId=" + tbId,
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "数据库字段管理",
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'fdId',
+                    title: '字段id',
+                    visible: false
+                },
+                {
+                    field: 'tbId',
+                    title: '表id',
+                    visible: false
+                },
+                {
+                    field: 'fdSort',
+                    title: '序号'
+                },
+                {
+                    field: 'fdName',
+                    title: '字段名称',
+                    formatter: function (value, row, index) {
+                        return $.table.primaryField(value,searchValue);
+                    }
+                },
+                {
+                    field: 'fdChName',
+                    title: '中文名',
+                    formatter: function (value, row, index) {
+                        return $.table.primaryField(value,searchValue);
+                    }
+                },
+                {
+                    field: 'fdType',
+                    title: '字段类型',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(fdTypeDatas, value);
+                    }
+                },
+                {
+                    field: 'fdLen',
+                    title: '字段长度'
+                },
+                {
+                    field: 'isKey',
+                    title: '是否是主键',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(isKeyDatas, value);
+                    }
+                },
+                {
+                    field: 'isNull',
+                    title: '是否是空',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(isNullDatas, value);
+                    }
+                },
+                {
+                    field: 'defVal',
+                    title: '默认值'
+                },
+                {
+                    field: 'fdDesc',
+                    title: '字段描述'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.fdId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.fdId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+</script>
+</body>
+</html>

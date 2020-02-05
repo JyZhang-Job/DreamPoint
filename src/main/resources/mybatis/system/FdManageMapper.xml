@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.dbmanage.mapper.FdManageMapper">
+    
+    <resultMap type="FdManage" id="FdManageResult">
+        <result property="fdId"    column="fd_id"    />
+        <result property="tbId"    column="tb_id"    />
+        <result property="fdName"    column="fd_name"    />
+        <result property="fdChName"    column="fd_ch_name"    />
+        <result property="fdType"    column="fd_type"    />
+        <result property="fdLen"    column="fd_len"    />
+        <result property="isKey"    column="is_key"    />
+        <result property="isNull"    column="is_null"    />
+        <result property="defVal"    column="def_val"    />
+        <result property="fdSort"    column="fd_sort"    />
+        <result property="fdDesc"    column="fd_desc"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectFdManageVo">
+        select fd_id, tb_id, fd_name, fd_ch_name, fd_type, fd_len, is_key, is_null, def_val, fd_sort, fd_desc, create_by, create_time, update_by, update_time, remark from sys_fd_manage
+    </sql>
+
+    <select id="selectFdManageList" parameterType="FdManage" resultMap="FdManageResult">
+        <include refid="selectFdManageVo"/>
+        <where>  
+            <if test="tbId != null "> and tb_id = #{tbId}</if>
+            <if test="fdName != null  and fdName != ''"> and fd_name like concat('%', #{fdName}, '%')</if>
+            <if test="fdChName != null  and fdChName != ''"> and fd_ch_name like concat('%', #{fdChName}, '%')</if>
+            <if test="fdType != null "> and fd_type = #{fdType}</if>
+            <if test="fdLen != null  and fdLen != ''"> and fd_len = #{fdLen}</if>
+            <if test="isKey != null  and isKey != ''"> and is_key = #{isKey}</if>
+            <if test="isNull != null  and isNull != ''"> and is_null = #{isNull}</if>
+            <if test="defVal != null  and defVal != ''"> and def_val = #{defVal}</if>
+            <if test="fdSort != null  and fdSort != ''"> and fd_sort = #{fdSort}</if>
+            <if test="fdDesc != null  and fdDesc != ''"> and fd_desc = #{fdDesc}</if>
+        </where>
+    </select>
+    
+    <select id="selectFdManageById" parameterType="Long" resultMap="FdManageResult">
+        <include refid="selectFdManageVo"/>
+        where fd_id = #{fdId}
+    </select>
+    <select id="selectFdManageBySearchVal" parameterType="String" resultType="String">
+       select tb_id from sys_fd_manage
+        where fd_name = #{searchValue}  or  fd_ch_name like concat('%', #{fdName}, '%')
+    </select>
+
+        
+    <insert id="insertFdManage" parameterType="FdManage" useGeneratedKeys="true" keyProperty="fdId">
+        insert into sys_fd_manage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tbId != null ">tb_id,</if>
+            <if test="fdName != null  and fdName != ''">fd_name,</if>
+            <if test="fdChName != null  and fdChName != ''">fd_ch_name,</if>
+            <if test="fdType != null ">fd_type,</if>
+            <if test="fdLen != null  and fdLen != ''">fd_len,</if>
+            <if test="isKey != null  and isKey != ''">is_key,</if>
+            <if test="isNull != null  and isNull != ''">is_null,</if>
+            <if test="defVal != null  and defVal != ''">def_val,</if>
+            <if test="fdSort != null  and fdSort != ''">fd_sort,</if>
+            <if test="fdDesc != null  and fdDesc != ''">fd_desc,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tbId != null ">#{tbId},</if>
+            <if test="fdName != null  and fdName != ''">#{fdName},</if>
+            <if test="fdChName != null  and fdChName != ''">#{fdChName},</if>
+            <if test="fdType != null ">#{fdType},</if>
+            <if test="fdLen != null  and fdLen != ''">#{fdLen},</if>
+            <if test="isKey != null  and isKey != ''">#{isKey},</if>
+            <if test="isNull != null  and isNull != ''">#{isNull},</if>
+            <if test="defVal != null  and defVal != ''">#{defVal},</if>
+            <if test="fdSort != null  and fdSort != ''">#{fdSort},</if>
+            <if test="fdDesc != null  and fdDesc != ''">#{fdDesc},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFdManage" parameterType="FdManage">
+        update sys_fd_manage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tbId != null ">tb_id = #{tbId},</if>
+            <if test="fdName != null  and fdName != ''">fd_name = #{fdName},</if>
+            <if test="fdChName != null  and fdChName != ''">fd_ch_name = #{fdChName},</if>
+            <if test="fdType != null ">fd_type = #{fdType},</if>
+            <if test="fdLen != null  and fdLen != ''">fd_len = #{fdLen},</if>
+            <if test="isKey != null  and isKey != ''">is_key = #{isKey},</if>
+            <if test="isNull != null  and isNull != ''">is_null = #{isNull},</if>
+            <if test="defVal != null  and defVal != ''">def_val = #{defVal},</if>
+            <if test="fdSort != null  and fdSort != ''">fd_sort = #{fdSort},</if>
+            <if test="fdDesc != null  and fdDesc != ''">fd_desc = #{fdDesc},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where fd_id = #{fdId}
+    </update>
+
+    <delete id="deleteFdManageById" parameterType="Long">
+        delete from sys_fd_manage where fd_id = #{fdId}
+    </delete>
+
+    <delete id="deleteFdManageByIds" parameterType="String">
+        delete from sys_fd_manage where fd_id in 
+        <foreach item="fdId" collection="array" open="(" separator="," close=")">
+            #{fdId}
+        </foreach>
+    </delete>
+    
+</mapper>

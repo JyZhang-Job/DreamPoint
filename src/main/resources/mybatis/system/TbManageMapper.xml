@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.dbmanage.mapper.TbManageMapper">
+    
+    <resultMap type="TbManage" id="TbManageResult">
+        <result property="tbId"    column="tb_id"    />
+        <result property="tbName"    column="tb_name"    />
+        <result property="tbChName"    column="tb_ch_name"    />
+        <result property="tbByDbid"    column="tb_by_dbid"    />
+        <result property="tbDesc"    column="tb_desc"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectTbManageVo">
+        select tb_id, tb_name, tb_ch_name, tb_by_dbid, tb_desc, create_by, create_time, update_by, update_time, remark from sys_tb_manage
+    </sql>
+
+    <select id="selectTbManageList" parameterType="TbManage" resultMap="TbManageResult">
+        <include refid="selectTbManageVo"/>
+        <where>  
+            <if test="tbName != null  and tbName != ''"> and tb_name like concat('%', #{tbName}, '%')</if>
+            <if test="tbChName != null  and tbChName != ''"> and tb_ch_name like concat('%', #{tbChName}, '%')</if>
+            <if test="tbByDbid != null "> and tb_by_dbid = #{tbByDbid}</if>
+            <if test="tbDesc != null  and tbDesc != ''"> and tb_desc = #{tbDesc}</if>
+        </where>
+    </select>
+    
+    <select id="selectTbManageById" parameterType="Long" resultMap="TbManageResult">
+        <include refid="selectTbManageVo"/>
+        where tb_id = #{tbId}
+    </select>
+
+    <select id="selectTbManageListByDbId" parameterType="Long" resultMap="TbManageResult">
+        <include refid="selectTbManageVo"/>
+        where tb_by_dbid = #{dbId}
+    </select>
+        
+    <insert id="insertTbManage" parameterType="TbManage" useGeneratedKeys="true" keyProperty="tbId">
+        insert into sys_tb_manage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tbName != null  and tbName != ''">tb_name,</if>
+            <if test="tbChName != null  and tbChName != ''">tb_ch_name,</if>
+            <if test="tbByDbid != null ">tb_by_dbid,</if>
+            <if test="tbDesc != null  and tbDesc != ''">tb_desc,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tbName != null  and tbName != ''">#{tbName},</if>
+            <if test="tbChName != null  and tbChName != ''">#{tbChName},</if>
+            <if test="tbByDbid != null ">#{tbByDbid},</if>
+            <if test="tbDesc != null  and tbDesc != ''">#{tbDesc},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbManage" parameterType="TbManage">
+        update sys_tb_manage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tbName != null  and tbName != ''">tb_name = #{tbName},</if>
+            <if test="tbChName != null  and tbChName != ''">tb_ch_name = #{tbChName},</if>
+            <if test="tbByDbid != null ">tb_by_dbid = #{tbByDbid},</if>
+            <if test="tbDesc != null  and tbDesc != ''">tb_desc = #{tbDesc},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where tb_id = #{tbId}
+    </update>
+
+    <delete id="deleteTbManageById" parameterType="Long">
+        delete from sys_tb_manage where tb_id = #{tbId}
+    </delete>
+
+    <delete id="deleteTbManageByIds" parameterType="String">
+        delete from sys_tb_manage where tb_id in 
+        <foreach item="tbId" collection="array" open="(" separator="," close=")">
+            #{tbId}
+        </foreach>
+    </delete>
+    
+</mapper>

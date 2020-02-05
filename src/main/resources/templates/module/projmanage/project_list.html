@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('项目列表')"/>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row" id="test">
+    </div>
+</div>
+
+<th:block th:include="include :: footer"/>
+<script>
+
+    var prefix = ctx + "module/projmanage"
+
+    $(function () {
+
+        init();
+    });
+
+    //展示头像
+    function init() {
+
+
+        var url = prefix + '/test5';
+        var actions = [];
+        var data = {'a': '123'};
+        $.ajax({
+            type: "post",
+            url: url,
+            data: data,
+            async: false,
+            dataType: "json",
+            success: function (rep) {
+                $.each(rep.data, function (i, val1) {
+                    actions.push("<div class='col-sm-4' >");
+                    $.each(val1, function (j, val2) {
+                        actions.push("<div class='ibox'>");
+
+                        actions.push("<div class='ibox-title'>");
+                        actions.push("<span class='label label-primary pull-right'><a  href='javascript:void(0)' onclick=detail("+val2.projInfo.projId+")>查看</a> </span>");
+                        actions.push("<h5>"+val2.projInfo.projName+"</h5>");
+                        actions.push("</div>");
+
+                        actions.push("<div class='ibox-content'>");
+                        actions.push("<div class='team-members'>");
+                        actions.push("成员：");
+                        $.each(val2.user, function (k, user) {
+                            actions.push("<a title='" + user.userName + "' href='" + user.avatar + "'  target='_blank' style='margin-left:6px' >" );
+                            actions.push("<img class='img-circle' src='" + user.avatar + "' />");
+                            actions.push("</a>");
+
+                        });
+                        actions.push(" <h4>项目简介</h4>");
+                        actions.push("<p>"+val2.projInfo.projDesc+"</p>");
+                        actions.push("<div><span>当前项目进度：</span>");
+                        actions.push("<div class='stat-percent'>"+val2.projInfo.projProgress+"%</div>");
+                        actions.push("<div class='progress progress-mini'>");
+                        actions.push("<div style='width:"+ val2.projInfo.projProgress+"%' class='progress-bar'></div>");
+                        actions.push("</div>");
+                        actions.push("</div>");
+                        actions.push("<div class='row  m-t-sm'>");
+                        actions.push("<div class='col-sm-4 text-left'>");
+                        actions.push("<div class='font-bold'>项目周期</div>");
+                        actions.push("4个月");
+                        actions.push("</div>");
+                        actions.push("<div class='col-sm-4 text-right'>");
+                        actions.push("<div class=\"font-bold\">预算</div>");
+                        actions.push("&yen;200913 <i class=\"fa fa-level-up text-navy\"></i>");
+                        actions.push("</div>");
+                        actions.push("</div>");
+                        actions.push("</div>");
+                        actions.push("</div>");
+                        actions.push("</div>");
+
+                    });
+                    actions.push("</div>");
+
+                });
+                $("#test").append(actions.join(''));
+            }
+
+        });
+
+    }
+
+
+    /*数据库表-详细*/
+    function detail(projId) {
+        var url = prefix + '/projmanage/' + projId;
+        $.modal.openTab("项目详情", url);
+    }
+</script>
+
+
+</body>
+</html>
+
