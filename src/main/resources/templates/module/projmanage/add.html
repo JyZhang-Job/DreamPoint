@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('新增项目管理详情')"/>
+    <th:block th:include="include :: select2-css" />
+    <th:block th:include="include :: bootstrap-select-css" />
+    <link th:href="@{/css/bootstrap-slider.css}" rel="stylesheet"/>
+    <style>
+        .slider.slider-horizontal {
+            width: 200px;
+        }
+
+        .slider.slider-horizontal .slider-selection {
+            background: #00a65a;
+        }
+
+    </style>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-projmanage-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">项目名称：</label>
+            <div class="col-sm-8">
+                <input name="projName" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">项目负责人：</label>
+            <div class="col-sm-8">
+                <input name="projLeader" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">项目周期（月）：</label>
+            <div class="col-sm-8">
+                <input name="projPeriod" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">项目预算（￥）：</label>
+            <div class="col-sm-8">
+                <input name="projBudget" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">项目状态：</label>
+            <div class="col-sm-8">
+                <select name="projStatus" class="form-control m-b" th:with="type=${@dict.getType('proj_status')}">
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">项目阶段：</label>
+            <div class="col-sm-8">
+                <select name="projStage" class="form-control m-b" th:with="type=${@dict.getType('proj_stage')}">
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">项目进度：</label>
+            <div class="col-sm-8">
+                <input id="projProgress" class="form-control" type="text" name="projProgress"/> &nbsp;&nbsp; <span
+                    id="progressVal"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">参与人员：</label>
+            <div class="col-sm-8">
+                <select class="form-control noselect2 selectpicker" name="projUserids" data-none-selected-text="请选选择人员" multiple   >
+                    <option th:each="user:${user}" th:value="${user.userId}" th:text="${user.userName}" ></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">项目描述：</label>
+            <div class="col-sm-8">
+                <textarea name="projDesc" class="form-control" style="height: 100px"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: select2-js" />
+<th:block th:include="include :: bootstrap-select-js" />
+<script th:src="@{/js/bootstrap-slider.js}"></script>
+<script type="text/javascript">
+    var prefix = ctx + "module/projmanage"
+    $("#form-projmanage-add").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-projmanage-add').serialize());
+        }
+    }
+
+
+    //进度条滑块
+    $('#projProgress').slider({
+        min: 0,
+        max: 100,
+        step: 1,
+        value: 0,
+        formatter: function (value) {
+            $("#progressVal").text(value + '%');
+            return '项目进度 ：' + value + '%';
+        }
+    });
+
+</script>
+</body>
+</html>
