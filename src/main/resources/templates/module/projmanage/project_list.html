@@ -11,19 +11,17 @@
 </div>
 
 <th:block th:include="include :: footer"/>
-<script>
+<script th:inline="javascript">
 
-    var prefix = ctx + "module/projmanage"
+    var prefix = ctx + "module/projmanage";
+    var projStatusDatas = [[${@dict.getType('proj_status')}]];
 
     $(function () {
 
         init();
     });
 
-    //展示头像
     function init() {
-
-
         var url = prefix + '/test5';
         var actions = [];
         var data = {'a': '123'};
@@ -62,13 +60,17 @@
                         actions.push("</div>");
                         actions.push("</div>");
                         actions.push("<div class='row  m-t-sm'>");
-                        actions.push("<div class='col-sm-4 text-left'>");
+                        actions.push("<div class='col-sm-4'>");
+                        actions.push("<div class='font-bold'>项目状态</div>");
+                        actions.push(getLabel(val2.projInfo.projStatus));
+                        actions.push("</div>");
+                        actions.push("<div class='col-sm-4'>");
                         actions.push("<div class='font-bold'>项目周期</div>");
-                        actions.push("4个月");
+                        actions.push(val2.projInfo.projPeriod+" 个月");
                         actions.push("</div>");
                         actions.push("<div class='col-sm-4 text-right'>");
                         actions.push("<div class=\"font-bold\">预算</div>");
-                        actions.push("&yen;200913 <i class=\"fa fa-level-up text-navy\"></i>");
+                        actions.push("&yen;"+val2.projInfo.projBudget+"<i class=\"fa fa-level-up text-navy\"></i>");
                         actions.push("</div>");
                         actions.push("</div>");
                         actions.push("</div>");
@@ -84,6 +86,10 @@
 
         });
 
+    }
+
+    function getLabel(val){
+        return $.table.selectDictLabel(projStatusDatas, val);
     }
 
 
